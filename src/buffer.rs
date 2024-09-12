@@ -10,6 +10,13 @@ pub struct Buffer {
 }
 
 impl Buffer {
+    pub fn new() -> Buffer {
+        Buffer {
+            chunks: LinkedList::new(),
+            pos: 0,
+        }
+    }
+
     fn grow_to(&mut self, index: usize) -> io::Result<()> {
         let chunk_index = index / CHUNK_SIZE;
 
