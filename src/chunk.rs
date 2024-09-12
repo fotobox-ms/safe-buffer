@@ -1,6 +1,3 @@
-use std::io;
-use std::io::ErrorKind;
-
 pub const CHUNK_SIZE: usize = 1 << 12;
 
 pub struct Chunk {
@@ -23,5 +20,9 @@ impl Chunk {
     pub fn set(&mut self, index: usize, value: u8) {
         assert!(index < CHUNK_SIZE);
         self.inner[index] = value;
+    }
+
+    pub fn as_slice(&self) -> &[u8] {
+        self.inner.as_slice()
     }
 }

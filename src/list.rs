@@ -1,5 +1,3 @@
-use std::alloc::{Allocator};
-
 pub trait MoveTo {
     fn move_to(&mut self, pos: usize);
 }

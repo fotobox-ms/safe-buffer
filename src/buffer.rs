@@ -1,9 +1,3 @@
-use std::collections::LinkedList;
-use std::{io};
-use std::io::{Error, ErrorKind, SeekFrom};
-use crate::chunk::{Chunk, CHUNK_SIZE};
-use crate::list::MoveTo;
-
 pub struct Buffer {
     chunks: LinkedList<Chunk>,
     pos: usize,
