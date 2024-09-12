@@ -26,11 +26,16 @@ impl Buffer {
         Ok(())
     }
 
-    fn len(&mut self) -> usize {
+    pub fn len(&mut self) -> usize {
         if self.chunks.is_empty() { 0 } else {
             let last = self.chunks.back().unwrap();
             (self.chunks.len() - 1) * CHUNK_SIZE + last.len()
         }
+    }
+
+    pub fn pop_front(&mut self) -> Option<Chunk> {
+        self.pos = if self.pos > CHUNK_SIZE {self.pos - CHUNK_SIZE} else { 0 };
+        self.chunks.pop_front()
     }
 }
 
