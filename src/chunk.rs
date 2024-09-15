@@ -19,6 +19,15 @@ impl Chunk {
 
     pub fn set(&mut self, index: usize, value: u8) {
         assert!(index < CHUNK_SIZE);
+
+        // grow array if necessary
+        if index >= self.inner.len() {
+            let diff = index - self.inner.len();
+            for _ in 0..(diff + 1) {
+                self.inner.push(0);
+            }
+        }
+
         self.inner[index] = value;
     }
 

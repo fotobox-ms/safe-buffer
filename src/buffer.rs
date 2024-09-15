@@ -17,10 +17,10 @@ impl Buffer {
         // check if already allocated
         let capacity = self.chunks.len();
         if chunk_index < capacity {
-            return Ok(())
+            return Ok(());
         }
 
-        for _ in capacity..chunk_index {
+        for _ in capacity..(chunk_index + 1) {
             self.chunks.push_back(Chunk::new()?);
         }
 
@@ -35,17 +35,31 @@ impl Buffer {
     }
 
     pub fn pop_front(&mut self) -> Option<Chunk> {
-        self.pos = if self.pos > CHUNK_SIZE {self.pos - CHUNK_SIZE} else { 0 };
+        self.pos = if self.pos > CHUNK_SIZE { self.pos - CHUNK_SIZE } else { 0 };
         self.chunks.pop_front()
     }
 }
 
 impl io::Write for Buffer {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        if buf.is_empty() { return Ok(0); }
+
         // ensure size
         self.grow_to(self.pos + buf.len() - 1)?;
 
-        let mut iter = self.chunks.cursor_back_mut();
+        let len = self.chunks.len();
+
+        #[cfg(test)]
+        {
+            println!("chunks: {}", len);
+        }
+
+        let first_index = self.pos / CHUNK_SIZE;
+        let mut iter = if first_index < len - first_index {
+            self.chunks.cursor_front_mut()
+        } else {
+            self.chunks.cursor_back_mut()
+        };
 
         for i in 0..buf.len() {
             let cursor = self.pos + i;
